@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html {% block html %}{% endblock %}>
+    <head>
+        {% block head %}{% endblock %}
+
+        <title>{% block title %}{% endblock %}</title>
+
+        <link rel="stylesheet" href="{% static "css/bootstrap-grid.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap-reboot.min.css" %}">
+        <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+
+        <script type="text/javascript" src="{% static "js/jquery-3.2.1.min.js" %}"></script>
+
+
+   </head>
+    <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <span class="navbar-brand"><a href="/">Blog</a></span>
+        <ul class="navbar-nav mr-auto">
+            <li {% if section == "dashboard" %}class=" nav-item active"{% endif %}><a class="nav-link" href="{% url "dashboard" %}">My account</a></li>
+            {% block logged_in_nav %}{% endblock %}
+
+        </ul>
+
+        <p class="navbar-text navbar-right">
+        {% if request.user.is_authenticated %}
+            Hello {{ request.user.first_name }}, <a class="navbar-link" href="{% url "logout" %}">Logout</a>
+        {% else %}
+            <a class="navbar-link" href="{% url "login" %}">Log-in</a>
+        {% endif %}
+        </p>
+    </nav>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {{ message|safe }}
+                    <a href="#" class="close">×</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <div id="content" class="container-fluid">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>
